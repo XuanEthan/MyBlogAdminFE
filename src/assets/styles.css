@@ -1,0 +1,56 @@
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+  font-family: sans-serif;
+}
+
+:root {
+  --container-bg-color: #f1f1f1;
+  --navbar-bg-color: #1e1e1e;
+  --text-color-normal: white;
+  --bar-hover-clicked: #3858e9;
+  --button-border-color: #3858e9;
+  --button-text-color: #3858e9;
+  --table-border-bg-color: #a0a0a0;
+  --font-size-normal: 13px;
+  --table-th-font-size: 14px;
+}
+
+.container {
+  display: flex;
+  width: 100vw;
+  height: 100vh;
+  background-color: var(--container-bg-color);
+}
+
+.navbar {
+  background-color: var(--navbar-bg-color);
+}
+
+.navbar li {
+  color: white;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  list-style-type: none;
+}
+
+main {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+.content {
+  padding: 0 8px;
+  overflow: auto;
+  height: 600px;
+}
+
+a {
+  text-decoration: none;
+}
+
+.router-link-active.router-link-exact-active {
+  background-color: var(--bar-hover-clicked);
+}

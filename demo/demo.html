@@ -1,0 +1,126 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard</title>
+    <!-- Font Awesome -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css"
+    />
+  </head>
+  <body>
+    <div class="contain">
+      <!-- là 1 component -->
+      <nav class="navbar navbar-left">
+        <ul>
+          <li><i class="fa-solid fa-gauge"></i> Dashboard</li>
+          <li><i class="fa-solid fa-file-alt"></i> Posts</li>
+        </ul>
+      </nav>
+
+      <main>
+        <!-- là 1 component -->
+        <nav class="navbar navbar-top">
+          <ul>
+            <li>
+              <div class="Notification">
+                <i class="fa-solid fa-bell"></i>
+              </div>
+            </li>
+            <li>Hi, Admin</li>
+          </ul>
+        </nav>
+        <div class="content">
+          <!-- là router view -->
+        </div>
+      </main>
+    </div>
+  </body>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      padding: 0;
+      margin: 0;
+      font-family: sans-serif;
+    }
+
+    :root {
+      --contain-bg-color: #f1f1f1;
+      --navbar-bg-color: #1e1e1e;
+      --font-size-normal: 13px;
+      --bar-hover-clicked: #3858e9;
+    }
+
+    .contain {
+      display: flex;
+      width: 100vw;
+      height: 100vh;
+      background-color: var(--contain-bg-color);
+    }
+
+    li {
+      list-style-type: none;
+    }
+
+    .navbar {
+      background-color: var(--navbar-bg-color);
+    }
+
+    .navbar li {
+      color: white;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .navbar-left li {
+      padding: 10px 12px;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .navbar-left li:hover {
+      background: var(--bar-hover-clicked);
+    }
+
+    .navbar-left {
+      width: 250px;
+      height: 100%;
+    }
+
+    main {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .navbar-top {
+      width: 100%;
+      height: 40px;
+      background: var(--navbar-bg-color);
+      color: white;
+    }
+
+    .navbar-top ul {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      height: 100%;
+      margin-right: 12px;
+      gap: 16px;
+    }
+
+    .navbar-top ul li {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .content {
+      padding: 0 8px;
+      overflow: auto;
+    }
+  </style>
+</html>
