@@ -1,9 +1,11 @@
 import apiBase from './ApiBase'
 
-export async function getAll() {
-  return await apiBase.get('/posts')
+export async function getAll(searchKey) {
+  return await apiBase.get(`/posts?searchKey=${searchKey}`)
 }
-
+export async function getById(id) {
+  return await apiBase.get(`/posts/${id}`)
+}
 export async function addPost(title, paragraph) {
   return await apiBase.post('/posts', { title, paragraph })
 }

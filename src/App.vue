@@ -1,23 +1,28 @@
 <script setup>
-import { RouterView } from 'vue-router';
-import NavBarLeft from './components/NavBarLeft.vue';
-import NavBarTop from './components/NavBarTop.vue';
+import { computed } from 'vue';
+import { useRoute } from 'vue-router';
+
+import DefaultLayout from './layouts/DefaultLayout.vue';
+import ErrorLayout from './layouts/ErrorLayout.vue';
+
+// SỬA Ở ĐÂY: Dùng object {} thay vì array []
+const layouts = {
+  DefaultLayout, // Tương đương DefaultLayout: DefaultLayout
+  ErrorLayout,   // Tương đương ErrorLayout: ErrorLayout
+};
+
+const route = useRoute();
+
+const layoutComponent = computed(() => {
+  // Dòng này giờ sẽ hoạt động đúng
+  const layoutName = route.meta.layout || 'DefaultLayout';
+  return layouts[layoutName];
+});
 </script>
 
 <template>
-  <div class="container">
-    <NavBarLeft />
-
-    <main>
-      <NavBarTop />
-      <div class="content">
-        <RouterView />
-      </div>
-    </main>
-
-  </div>
+  <component :is="layoutComponent">
+  </component>
 </template>
 
-<style>
-@import "/src/assets/styles.css";
-</style>
+<style></style>

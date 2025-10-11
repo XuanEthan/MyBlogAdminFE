@@ -3,6 +3,8 @@ import Dashboard from '@/views/Dashboard.vue'
 import AddPost from '@/views/posts/AddPost.vue'
 import Posts from '@/views/posts/Posts.vue'
 import UpdatePost from '@/views/posts/UpdatePost.vue'
+import NotFound from '@/views/errors/NotFound.vue'
+import InternalServerError from '@/views/errors/InternalServerError.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -11,6 +13,12 @@ const router = createRouter({
     { path: '/Posts', component: Posts },
     { path: '/AddPost', component: AddPost },
     { path: '/UpdatePost/:id', component: UpdatePost },
+    { path: '/NotFound', component: NotFound, meta: { layout: 'ErrorLayout' } },
+    {
+      path: '/InternalServerError',
+      component: InternalServerError,
+      meta: { layout: 'ErrorLayout' },
+    },
   ],
 })
 

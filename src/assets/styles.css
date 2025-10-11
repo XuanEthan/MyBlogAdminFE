@@ -12,7 +12,7 @@
   --bar-hover-clicked: #3858e9;
   --button-border-color: #3858e9;
   --button-text-color: #3858e9;
-  --table-border-bg-color: #a0a0a0;
+  --table-border-bg-color: #cacaca;
   --font-size-normal: 13px;
   --table-th-font-size: 14px;
 }
@@ -42,15 +42,24 @@ main {
   flex-direction: column;
 }
 .content {
-  padding: 0 8px;
+  padding: 16px;
   overflow: auto;
   height: 600px;
 }
 
-a {
+a,
+input[type='submit'] {
   text-decoration: none;
+  cursor: pointer;
 }
 
 .router-link-active.router-link-exact-active {
   background-color: var(--bar-hover-clicked);
+}
+
+i.error-msg {
+  color: red;
+  font-size: 13px;
+  display: block;
+  margin-top: 2px;
 }
