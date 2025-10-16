@@ -17,16 +17,17 @@ export const usePostStore = defineStore('post', {
     async getById(id) {
       return (await getById(id)).data
     },
-    async addPost(title, paragraph) {
+    async addPost(post) {
       try {
-        await addPost(title, paragraph)
+        console.log(post)
+        await addPost(post)
       } catch (e) {
         throw e
       }
     },
-    async updatePost(id, title, paragraph, created) {
+    async updatePost(post) {
       try {
-        await updatePost(id, title, paragraph, created)
+        await updatePost(post)
       } catch (e) {
         throw e
       }

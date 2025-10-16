@@ -3,19 +3,22 @@ import { onMounted, reactive } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { usePostStore } from '@/stores/postStore'
 import { useToast } from 'vue-toastification'
+import Editor from '@/components/Editor.vue'
+import { PostUpdateDto, PostResponseDto } from '@/models/post'
+import { useCategoryStore } from '@/stores/categoryStore'
+import { useTagStore } from '@/stores/tagStore'
+import { updatePost } from '@/services/PostService'
 
 const route = useRoute()
 const router = useRouter()
-const postStore = usePostStore()
 const toast = useToast()
 
-// Biến reactive để lưu dữ liệu post
-const post = reactive({
-    id: null,
-    title: '',
-    paragraph: '',
-    created: ''
-})
+const postStore = usePostStore()
+const categoryStore = useCategoryStore()
+const tagStore = useTagStore()
+
+const postUpdate = reactive(new PostUpdateDto())
+const post = reactive(new PostResponseDto())
 
 // Reactive để lưu lỗi nhập liệu
 const inputErrorMessages = reactive({
@@ -26,25 +29,34 @@ const inputErrorMessages = reactive({
 // Hàm cập nhật bài viết
 async function handleUpdate() {
     try {
-        await postStore.updatePost(post.id, post.title, post.paragraph, post.created)
+        await postStore.updatePost(postUpdate)
         toast.success('Updated successfully!')
         router.back()
     } catch (e) {
-        console.log(e.response?.data)
-
-        // Lỗi nghiệp vụ (validation)
-        if (e.response?.data?.errors) {
-            Object.assign(inputErrorMessages, e.response.data.errors)
-        }
+        Object.assign(inputErrorMessages, e.response.data.errors)
     }
 }
 
-// Khi component mount → load bài viết cần chỉnh sửa
 onMounted(async () => {
     try {
         const resp = await postStore.getById(Number(route.params.id))
-        console.log(resp)
+
+        await categoryStore.getAll()
+        await tagStore.getAll()
+
         Object.assign(post, resp)
+
+        postUpdate.id = post.id
+        postUpdate.title = post.title
+        postUpdate.content = post.content
+        post.categories.forEach(element => {
+            postUpdate.categoryIds.push(element.id)
+        });
+        post.tags.forEach(element => {
+            postUpdate.tagIds.push(element.id)
+        })
+
+        console.log(postUpdate)
     } catch (e) {
         router.push('/NotFound')
     }
@@ -52,63 +64,47 @@ onMounted(async () => {
 </script>
 
 <template>
-    <form @submit.prevent="handleUpdate">
-        <input type="text" name="title" placeholder="Title" v-model="post.title" />
-        <i v-if="inputErrorMessages.Title?.length" class="error-msg">
-            {{ inputErrorMessages.Title[0] }}
-        </i>
+    <div class="container">
+        <form @submit.prevent="handleUpdate">
+            <div class="form-left">
+                <input type="text" name="title" placeholder="Title" v-model="postUpdate.title" />
+                <i v-if="inputErrorMessages.Title?.length" class="error-msg">
+                    {{ inputErrorMessages.Title[0] }}
+                </i>
 
-        <textarea placeholder="Paragraph" name="paragraph" v-model="post.paragraph"></textarea>
-        <i v-if="inputErrorMessages.Paragraph?.length" class="error-msg">
-            {{ inputErrorMessages.Paragraph[0] }}
-        </i>
+                <editor v-model="postUpdate.content" />
+                <i v-if="inputErrorMessages.Content?.length" class="error-msg">
+                    {{ inputErrorMessages.Content[0] }}
+                </i>
+            </div>
+            <div class="form-right">
+                <!-- Categories -->
+                <div class="card">
+                    <label>Categories</label>
+                    <div class="checkbox-group categories">
+                        <label v-for="category in categoryStore.categories" :key="category.id" class="checkbox-item">
+                            <input type="checkbox" v-model="postUpdate.categoryIds" :value="category.id" />
+                            {{ category.name }}
+                        </label>
+                    </div>
+                </div>
 
-        <input type="submit" value="Save" />
-    </form>
+                <!-- Tags -->
+                <div class="card">
+                    <label>Tags</label>
+                    <div class="checkbox-group">
+                        <label v-for="tag in tagStore.tags" :key="tag.id" class="checkbox-item">
+                            <input type="checkbox" v-model="postUpdate.tagIds" :value="tag.id" />
+                            {{ tag.name }}
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <input type="submit" value="Save" />
+        </form>
+    </div>
 </template>
+
 <style scoped>
-form {
-    padding-top: 50px;
-    width: 100%;
-    height: 100%;
-    position: relative;
-}
-
-form input,
-form textarea {
-    border: none;
-}
-
-form input[type="text"],
-form textarea {
-    display: block;
-    width: 100%;
-    padding: 6px;
-}
-
-form textarea {
-    height: 400px;
-    resize: none;
-}
-
-form input[type="submit"] {
-    position: absolute;
-    top: 12px;
-    right: 0;
-    background-color: #3858e9;
-    color: white;
-    padding: 8px;
-    cursor: pointer;
-
-}
-
-form input[name="title"] {
-    font-size: 30px;
-    height: auto;
-}
-
-form input[name="paragraph"] {
-    font-size: 20px;
-    font-weight: lighter;
-}
+@import url('/src/assets/form.css');
 </style>

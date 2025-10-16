@@ -1,26 +1,33 @@
 <script setup>
-import { reactive } from 'vue'
+import { onMounted, reactive } from 'vue'
 import { useRouter } from 'vue-router'
 import { usePostStore } from '@/stores/postStore'
 import { useToast } from 'vue-toastification'
+import Editor from '@/components/Editor.vue'
+import { PostCreateDto } from '@/models/post'
+import { useCategoryStore } from '@/stores/categoryStore'
+import { useTagStore } from '@/stores/tagStore'
+
 
 const toast = useToast()
 const router = useRouter()
-const postStore = usePostStore()
 
-const post = reactive({
-    title: '',
-    paragraph: ''
-})
+const postStore = usePostStore()
+const categoryStore = useCategoryStore()
+const tagStore = useTagStore()
+
+
+const post = reactive(new PostCreateDto())
 
 const inputErrorMessages = reactive({
     Title: [],
-    Paragraph: []
+    Content: []
 })
+
 
 async function handleAdd() {
     try {
-        await postStore.addPost(post.title, post.paragraph)
+        await postStore.addPost(post)
         toast.success('Added successfully !')
         router.back()
     } catch (e) {
@@ -32,67 +39,55 @@ async function handleAdd() {
         }
     }
 }
+
+onMounted(() => {
+    categoryStore.getAll()
+    tagStore.getAll()
+})
 </script>
 
 <template>
-    <form @submit.prevent="handleAdd">
-        <input type="text" name="title" placeholder="Title" v-model="post.title" />
-        <i v-if="inputErrorMessages.Title?.length" class="error-msg">
-            {{ inputErrorMessages.Title[0] }}
-        </i>
+    <div class="container">
+        <form @submit.prevent="handleAdd">
+            <div class="form-left">
+                <input type="text" name="title" placeholder="Title" v-model="post.title" />
+                <i v-if="inputErrorMessages.Title?.length" class="error-msg">
+                    {{ inputErrorMessages.Title[0] }}
+                </i>
+                <editor v-model="post.content" />
+                <i v-if="inputErrorMessages.Content?.length" class="error-msg">
+                    {{ inputErrorMessages.Content[0] }}
+                </i>
+            </div>
+            <div class="form-right">
+                <!-- Categories -->
+                <div class="card">
+                    <label>Categories</label>
+                    <div class="checkbox-group categories">
+                        <label v-for="category in categoryStore.categories" :key="category.id" class="checkbox-item">
+                            <input type="checkbox" v-model="post.categoryIds" :value="category.id" />
+                            {{ category.name }}
+                        </label>
+                    </div>
+                </div>
 
-        <textarea placeholder="Paragraph" name="paragraph" v-model="post.paragraph"></textarea>
-        <i v-if="inputErrorMessages.Paragraph?.length" class="error-msg">
-            {{ inputErrorMessages.Paragraph[0] }}
-        </i>
+                <!-- Tags -->
+                <div class="card">
+                    <label>Tags</label>
+                    <div class="checkbox-group tags">
+                        <label v-for="tag in tagStore.tags" :key="tag.id" class="checkbox-item">
+                            <input type="checkbox" v-model="post.tagIds" :value="tag.id" />
+                            {{ tag.name }}
+                        </label>
+                    </div>
+                </div>
+            </div>
 
-        <input type="submit" value="Publish" />
-    </form>
+            <input type="submit" value="Publish" />
+        </form>
+    </div>
 </template>
 
 <style scoped>
-form {
-    padding-top: 50px;
-    width: 100%;
-    height: 100%;
-    position: relative;
-}
-
-form input,
-form textarea {
-    border: none;
-}
-
-form input[type="text"],
-form textarea {
-    display: block;
-    width: 100%;
-    padding: 6px;
-}
-
-form textarea {
-    height: 400px;
-    resize: none;
-}
-
-form input[type="submit"] {
-    position: absolute;
-    top: 12px;
-    right: 0;
-    background-color: #3858e9;
-    color: white;
-    padding: 8px;
-    cursor: pointer;
-}
-
-
-form input[name="title"] {
-    font-size: 30px;
-    height: auto;
-}
-
-form input[name="paragraph"] {
-    font-size: 20px;
-    font-weight: lighter;
-}
+@import url('/src/assets/form.css');
 </style>
