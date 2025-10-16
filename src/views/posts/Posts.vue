@@ -4,9 +4,10 @@ import { RouterLink } from 'vue-router';
 import { usePostStore } from '@/stores/postStore';
 import router from '@/router';
 import { useToast } from 'vue-toastification'
-const toast = useToast()
 
+const toast = useToast()
 const postStore = usePostStore();
+
 const query = reactive({
     searchKey: ""
 })
@@ -41,8 +42,9 @@ async function handleSearch() {
         <input type="search" placeholder="Search by Title" v-model="query.searchKey">
         <input type="submit" value="Search">
     </form>
+
     <p style="text-align: end; margin: 0px 0px 6px 0px; font-size: var(--font-size-normal);">{{ postStore.posts.length
-        }} items</p>
+    }} items</p>
     <table>
         <thead>
             <tr>

@@ -44,7 +44,7 @@ main {
 .content {
   padding: 16px;
   overflow: auto;
-  height: 600px;
+  height: 100%;
 }
 
 a,
@@ -62,4 +62,22 @@ i.error-msg {
   font-size: 13px;
   display: block;
   margin-top: 2px;
+}
+
+.header {
+  height: 50px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.header h1 {
+  font-weight: 500;
+  font-size: 24px;
+}
+
+input,
+.tiptap.ProseMirror.ProseMirror-focused {
+  outline: none;
 }

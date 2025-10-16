@@ -18,6 +18,7 @@ const layoutComponent = computed(() => {
   const layoutName = route.meta.layout || 'DefaultLayout';
   return layouts[layoutName];
 });
+
 </script>
 
 <template>
